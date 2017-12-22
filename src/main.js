@@ -9,7 +9,7 @@ import goods from '@/components/goods/goods'
 import ratings from '@/components/ratings/ratings'
 import seller from '@/components/seller/seller'
 
-//import './common/stylus/index.styl'
+import './common/stylus/index.styl'
 Vue.prototype.$http = axios
 
 Vue.use(VueRouter)
