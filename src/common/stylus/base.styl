@@ -2,7 +2,15 @@ body,html
     line-height: 1
     font-weight: 200
     font-family: 'PingFang SC',arial,sans-serif
-
+.clearfix 
+    display inline-block
+    &:after
+        dispaly: block
+        content: " "
+        height: 0
+        line-height: 0
+        vertical-align: center
+        clear: both
 
 @media (-webkit-min-device-pixel-ratio:1.5),(min-device-pixel-ratio: 1.5)
     .border-1px

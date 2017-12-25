@@ -1,0 +1,47 @@
+Sticky footers 使用方法
+
+    <div v-show="detailShow" class="detail">
+        <div class="detail-wrapper clearfix">
+            <div class="detail-main">
+                
+            </div>
+        </div>
+        <div class="detail-close">
+            <i class="icon-close"></i>
+        </div>
+    </div>
+    .detail
+        position fixed
+        top 0
+        left 0
+        z-index 100
+        width 100%
+        height 100%
+        overflow auto
+        background-color rgba(7,17,27,0.8)
+        .detail-wrapper
+            min-height 100%
+            .detail-main
+                margin-top 64px
+                padding-bottom 64px
+        .detail-close
+            position relative     
+            width 32px
+            height 32px
+            margin 0 auto
+            margin-top -64px
+            clear both
+            font-size 32px
+
+1.在内容区域外需要包装两层div，第一层div的最小高度必须设置为100%
+2.在内容层，就需要有一个向下的padding，是为了把底部留有一定的空间给关闭按钮
+3.clearfix在base.styl里已经定义为公共样式
+    .clearfix 
+        display inline-block
+        &:after
+            dispaly: block
+            content: " "
+            height: 0
+            line-height: 0
+            vertical-align: center
+            clear: both
