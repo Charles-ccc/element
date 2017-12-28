@@ -1,7 +1,7 @@
 <template>
   <div class="cartcontrol">
     <transition name="move">
-      <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">
+      <div class="cart-decrease" v-show="food.count>0">
         <span class="inner icon-remove_circle_outline"></span>
       </div>
     </transition>
@@ -11,13 +11,27 @@
 </template>
 
 <script>
+
+
 export default {
     props: {
         food: {
             type: Object
         }
     },
-    crea
+    methods: {
+        addCart(event) {
+            if(!event._constructed){
+                return
+            }
+            console.log(22)
+            if(!this.food.count) {
+                this.food.count =1
+            }else{
+                this.food.count ++
+            }
+        }
+    }
 }
 </script>
 
@@ -26,7 +40,7 @@ export default {
     font-size: 0
     .cart-decrease
         display: inline-block
-        padding: 6px
+        padding: 6px //增加点击区域
         opacity: 1
         transform: translate3d(0, 0, 0)
         .inner

@@ -1,4 +1,4 @@
-Sticky footers 使用方法
+1.Sticky footers 使用方法
 
     <div v-show="detailShow" class="detail">
         <div class="detail-wrapper clearfix">
@@ -45,3 +45,7 @@ Sticky footers 使用方法
             line-height: 0
             vertical-align: center
             clear: both
+
+
+2.在DOM中使用ref的时候，要写成驼峰形式。
+    ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例
