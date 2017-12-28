@@ -3,7 +3,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item, index) in goods" :key="index" class="menu-item">
+        <li v-for="(item, index) in goods" :key="index" class="menu-item" :class="{'current': currentIndex === index}" @click="selectMenu(index, $event)">
           <span class="text border-1px">
             <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
             {{item.name}}
@@ -13,7 +13,7 @@
     </div>
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="(item, index) in goods" :key="index" class="food-list">
+        <li v-for="(item, index) in goods" :key="index" class="food-list food-list-hook" >
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="(food, index) in item.foods" :key="index" class="food-item border-1px">
@@ -50,7 +50,9 @@ import cartcontrol from '../cartcontrol/cartcontrol'
     export default{
       data() {
         return {
-          goods:[]
+          goods:[],
+          listHeight:[], //存每个菜单列表的高度
+          scrollY: 0
         }
       },
       components:{
@@ -70,21 +72,58 @@ import cartcontrol from '../cartcontrol/cartcontrol'
           this.goods = res.data.api_data.goods
           this.$nextTick(() => {
             this._initScroll()
+            this._calculateHeight() 
           })
         }) 
-        .catch( (error) => {
+        .catch( (error) => { 
           console.log(error)
         })
+      },
+      computed: {
+        currentIndex() {
+          for(let i=0;i<this.listHeight.length;i++){
+            //获取区间模块的一个范围
+            let height1 = this.listHeight[i]
+            let height2 = this.listHeight[i + 1]
+            if(!height2 || (this.scrollY >= height1 && this.scrollY < height2)){
+              return i
+            }
+          }
+          return 0
+        }
       },
       methods: {
         _initScroll() {
           this.menuScroll = new BScroll(this.$refs.menuWrapper,{
-            
+            click: true 
+            //better-scroll监听了一些touch事件，然后会阻止默认的，所以传一个click属性
           })
 
           this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
-            
+            probeType: 3 //实时获取滚动的位置
           })
+          this.foodsScroll.on('scroll', (pos) => { //监听scroll事件，然后将实时位置暴露
+            this.scrollY = Math.abs(Math.round(pos.y)) //取整数的绝对值
+          })
+        },
+        _calculateHeight() {
+          let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
+          let height = 0
+          this.listHeight.push(height) //先把第一个高度push进去
+          for(let i=0;i<foodList.length;i++){
+            let item = foodList[i] //获得每一个foodList
+            height += item.clientHeight //获得每一个区块（foodList）的高度并且累加
+            this.listHeight.push(height)
+          }
+        },
+        selectMenu(index,event) {
+          //传入一个原生网页浏览器没有的事件 _constructed
+          if(!event._constructed){
+            return
+          }
+          let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
+          let el = foodList[index]
+          this.foodsScroll.scrollToElement(el,300)
         }
       }
     }
@@ -101,7 +140,7 @@ import cartcontrol from '../cartcontrol/cartcontrol'
     top 174px
     bottom 46px
     width 100%
-    overflow hidden
+    overflow hidden //将页面默认滚动禁止掉
     .menu-wrapper
       flex 0 0 80px //等分 内容缩放 占位
       width 80px
@@ -112,6 +151,14 @@ import cartcontrol from '../cartcontrol/cartcontrol'
         height 54px
         line-height 14px
         padding 0 12px
+        &.current
+          position relative
+          margin-top -1px
+          z-index 10
+          background-color #ffffff
+          font-weight 700
+          .text
+            border-none()
         .icon
           display inline-block
           width 12px
@@ -171,6 +218,7 @@ import cartcontrol from '../cartcontrol/cartcontrol'
             color rgb(147,153,159)
           .desc
             margin-bottom 8px
+            line-height 12px
           .extra
             .count
               margin-right 12px

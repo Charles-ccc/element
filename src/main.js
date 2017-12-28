@@ -14,35 +14,38 @@ Vue.prototype.$http = axios
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/goods',
-    name: 'goods',
-    component: goods
-  },
-  {
-    path: '/ratings',
-    name: 'ratings',
-    component: ratings
-  },
-  {
-    path: '/seller',
-    name: 'seller',
-    component: seller
-  }
+const routes = [{
+        path: '/',
+        redirect: '/goods'
+    },
+    {
+        path: '/goods',
+        name: 'goods',
+        component: goods
+    },
+    {
+        path: '/ratings',
+        name: 'ratings',
+        component: ratings
+    },
+    {
+        path: '/seller',
+        name: 'seller',
+        component: seller
+    }
 ]
 
 const router = new VueRouter({
-  routes,
-  'linkActiveClass': 'active'
+    routes,
+    'linkActiveClass': 'active'
 })
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: { App }
+    el: '#app',
+    router,
+    template: '<App/>',
+    components: { App }
 })
