@@ -90,6 +90,9 @@ import cartcontrol from '../cartcontrol/cartcontrol'
             }
           }
           return 0
+        },
+        selectFoods() {
+          return
         }
       },
       methods: {

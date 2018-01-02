@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import goods from '../goods/goods'
 import star from '../star/star'
 export default {
   data() {
@@ -77,7 +78,8 @@ export default {
       }
   },
   components:{
-    star
+    star,
+    goods
   },
   props: {
       seller:{
