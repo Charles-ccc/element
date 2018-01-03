@@ -105,11 +105,14 @@ import cartcontrol from '../cartcontrol/cartcontrol'
       },
       methods: {
         _initScroll() {
-          this.menuScroll = new BScroll(this.$refs.menuWrapper,{
+          if(!this.menuScroll){
+            this.menuScroll = new BScroll(this.$refs.menuWrapper,{
             click: true 
             //better-scroll监听了一些touch事件，然后会阻止默认的，所以传一个click属性
-          })
-
+            })
+          }else{
+            this.menuScroll.refresh()
+          }
           this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
             click: true ,
             probeType: 3 //实时获取滚动的位置
@@ -130,8 +133,9 @@ import cartcontrol from '../cartcontrol/cartcontrol'
         },
         selectMenu(index,event) {
           //传入一个原生网页浏览器没有的事件,是BScroll中的 _constructed
+          console.log(event)
           if(!event._constructed){
-            return
+            return false
           }
           let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
           let el = foodList[index]

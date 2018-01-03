@@ -126,7 +126,7 @@ export default {
                             click: true
                         })
                     }else{
-                        this.srcoll.refresh()
+                        this.scroll.refresh()
                     }
                 })
             }
