@@ -92,7 +92,15 @@ import cartcontrol from '../cartcontrol/cartcontrol'
           return 0
         },
         selectFoods() {
-          return
+          let foods = []
+          this.goods.forEach((good) => {
+            good.foods.forEach((food) =>{
+              if(food.count){
+                foods.push(food)
+              }
+            })
+          })
+          return foods
         }
       },
       methods: {
@@ -103,6 +111,7 @@ import cartcontrol from '../cartcontrol/cartcontrol'
           })
 
           this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
+            click: true ,
             probeType: 3 //实时获取滚动的位置
           })
           this.foodsScroll.on('scroll', (pos) => { //监听scroll事件，然后将实时位置暴露
@@ -120,7 +129,7 @@ import cartcontrol from '../cartcontrol/cartcontrol'
           }
         },
         selectMenu(index,event) {
-          //传入一个原生网页浏览器没有的事件 _constructed
+          //传入一个原生网页浏览器没有的事件,是BScroll中的 _constructed
           if(!event._constructed){
             return
           }

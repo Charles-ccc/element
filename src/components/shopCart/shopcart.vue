@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-      <div class="content">
+      <div class="content"  @click="toggleList">
           <div class="content-left">
               <div class="logo-wrapper">
                   <div class="logo" :class="{'highlight':totalCount>0}">
@@ -14,20 +14,51 @@
           <div class="content-right">
               <div class="pay" :class="payClass">{{payDesc}}</div>
           </div>
+          <transition name="fold">
+            <div class="shopcart-list" v-show="listShow">
+                <div class="list-header">
+                    <h1 class="title">购物车</h1>
+                    <span class="empty">清空</span>
+                </div>
+                <div class="list-content" ref="listContent">
+                    <ul>
+                        <li class="food" v-for="(food, index) in selectFoods" :key="index">
+                            <span class="name">{{ food.name }}</span>
+                            <div class="price">
+                                <span>￥{{ food.price*food.count}}</span>
+                            </div>
+                            <div class="cartcontrol-wrapper">
+                                <cartcontrol :food="food"></cartcontrol>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+          </transition>
       </div>
   </div>
 </template>
 
 <script>
+import BScroll from 'better-scroll'
+import cartcontrol from '../cartcontrol/cartcontrol'
 export default {
+    components:{
+        cartcontrol
+    },
+    data() {
+        return {
+            fold: true //设置变量检测是菜单页是收起还是展开状态，默认收起
+        }
+    },
     props: {
         selectFoods: {
             type: Array,
             default() {
                 return [
                     {
-                        price:9.25,
-                        count:4
+                        price: 9.25,
+                        count: 4
                     }
                 ]
             }
@@ -39,6 +70,14 @@ export default {
         minPrice: {
             type: Number,
             default: 30
+        }
+    },
+    methods: {
+        toggleList() {
+            if(!this.totalCount) { // 如果count为0，就return空
+                return
+            }
+            this.fold = !this.fold //取反，开启时，点击就关闭。
         }
     },
     computed: {
@@ -73,6 +112,26 @@ export default {
             }else{
                 return "enough"
             }
+        },
+        listShow() {
+            if(!this.totalCount){
+                this.fold = true
+                return false
+            }
+            let show = !this.fold
+            if (show) {
+                this.$nextTick(()=>{
+                    if(!this.scroll){
+                        this.scroll = new BScroll(this.$refs.listContent, {
+                            click: true
+                        })
+                    }else{
+                        this.srcoll.refresh()
+                    }
+                })
+            }
+            //fold为true的时候，show为false
+            return show
         }
     }
 }
@@ -166,19 +225,19 @@ export default {
                     &.enough
                         background: #00b43c
                         color: #fff
-        .ball-container
-            .ball
-                position: fixed
-                left: 32px
-                bottom: 22px
-                z-index: 200
-                transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
-                .inner
-                    width: 16px
-                    height: 16px
-                    border-radius: 50%
-                    background: rgb(0, 160, 220)
-                    transition: all 0.4s linear
+        // .ball-container
+        //     .ball
+        //         position: fixed
+        //         left: 32px
+        //         bottom: 22px
+        //         z-index: 200
+        //         transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        //         .inner
+        //             width: 16px
+        //             height: 16px
+        //             border-radius: 50%
+        //             background: rgb(0, 160, 220)
+        //             transition: all 0.4s linear
         .shopcart-list
             position: absolute
             left: 0
@@ -208,7 +267,7 @@ export default {
                 padding: 0 18px
                 max-height: 217px
                 overflow: hidden
-                background: #fff
+                background: #ffffff
                 .food
                     position: relative
                     padding: 12px 0

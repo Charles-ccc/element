@@ -1,7 +1,7 @@
 <template>
   <div class="cartcontrol">
     <transition name="move">
-      <div class="cart-decrease" v-show="food.count>0">
+      <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">
         <span class="inner icon-remove_circle_outline"></span>
       </div>
     </transition>
@@ -11,8 +11,7 @@
 </template>
 
 <script>
-
-
+import Vue from 'vue'
 export default {
     props: {
         food: {
@@ -21,14 +20,24 @@ export default {
     },
     methods: {
         addCart(event) {
+            //pc点击会进下面这个函数，但是被return掉
             if(!event._constructed){
                 return
             }
-            console.log(22)
             if(!this.food.count) {
-                this.food.count =1
+                //this.food.count =1
+                Vue.set(this.food, 'count',1)
             }else{
                 this.food.count ++
+            }
+            //vuejs特性，给观测对象添加一个不存在的字段，不可以直接赋值，检测不到变化，需要vue的一个接口 set
+        },
+        decreaseCart(event) {
+            if(!event._constructed){
+                return
+            }
+            if(this.food.count){
+                this.food.count --
             }
         }
     }
