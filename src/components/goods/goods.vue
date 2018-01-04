@@ -17,7 +17,7 @@
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li @click="selectFood(food,$event)" v-for="(food, index) in item.foods" :key="index" class="food-item border-1px">
-              <div class="icon">
+              <div class="icon" @click="abc">
                 <img :src="food.icon" width="57px">
               </div>
               <div class="content">
@@ -38,9 +38,10 @@
         </li>
       </ul>
     </div>
-    <shopcart ref="shopcart"  :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
   </div>
   <food :food="selectedFood" ref="food"></food>
+  <!-- ref="food" 获取子组件 -->
   </div>
 </template>
 
@@ -151,6 +152,9 @@ import food from '../food/food'
           //选中的food等于传入的food
           this.selectedFood = food
           this.$refs.food.show()
+        },
+        abc(){
+          this.$refs.food.abc()
         }
       }
     }

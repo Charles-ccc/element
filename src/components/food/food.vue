@@ -2,7 +2,12 @@
     <transition name="move">
         <div v-show="showFlag" class="food">
             <div class="food-content">
-            <div class="image-header"></div>
+            <div class="image-header">
+                <img :src="food.image">
+                <div class="back" @click="hide">
+                    <i class="icon-arrow_lift"></i>
+                </div>
+            </div>
         </div>
         </div>
     </transition>
@@ -23,6 +28,13 @@ export default {
     methods: {
         show() {
             this.showFlag = true
+        },
+        hide() {
+            this.showFlag = false
+        },
+        abc() {
+            console.log("abc")
+            console.log(this.food)
         }
     }
 }
@@ -42,4 +54,24 @@ export default {
             transition all 0.2s linear
         &.move-enter, &.move-leave-active
             transform translate3d(100%,0,0)
+        .image-header
+            position relative
+            width 100%
+            height 0
+            padding-bottom 100% //使宽高相等
+            img
+                position absolute
+                top 0
+                left 0
+                width 100%
+                height 100%
+            .back
+                position absolute
+                top 10px
+                left 0
+                .icon-arrow_lift
+                    display block
+                    padding 10px
+                    font-size 20px
+                    color #ffffff
 </style>
