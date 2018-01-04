@@ -1,42 +1,47 @@
 <template>
-  <div class="shopcart">
-      <div class="content"  @click="toggleList">
-          <div class="content-left">
-              <div class="logo-wrapper">
-                  <div class="logo" :class="{'highlight':totalCount>0}">
-                      <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
-                  </div>
-                  <div class="num" v-show="totalCount>0">{{totalCount}}</div>
-              </div>
-              <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}元</div>
-              <div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
-          </div>
-          <div class="content-right">
-              <div class="pay" :class="payClass">{{payDesc}}</div>
-          </div>
-          <transition name="fold">
-            <div class="shopcart-list" v-show="listShow">
-                <div class="list-header">
-                    <h1 class="title">购物车</h1>
-                    <span class="empty">清空</span>
+    <div>
+        <div class="shopcart">
+            <div class="content"  @click="toggleList">
+                <div class="content-left">
+                    <div class="logo-wrapper">
+                        <div class="logo" :class="{'highlight':totalCount>0}">
+                            <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
+                        </div>
+                        <div class="num" v-show="totalCount>0">{{totalCount}}</div>
+                    </div>
+                    <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}元</div>
+                    <div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
                 </div>
-                <div class="list-content" ref="listContent">
-                    <ul>
-                        <li class="food" v-for="(food, index) in selectFoods" :key="index">
-                            <span class="name">{{ food.name }}</span>
-                            <div class="price">
-                                <span>￥{{ food.price*food.count}}</span>
-                            </div>
-                            <div class="cartcontrol-wrapper">
-                                <cartcontrol :food="food"></cartcontrol>
-                            </div>
-                        </li>
-                    </ul>
+                <div class="content-right" @click.stop.prevent="pay">
+                    <div class="pay" :class="payClass">{{payDesc}}</div>
                 </div>
+                <transition name="fold">
+                    <div class="shopcart-list" v-show="listShow">
+                        <div class="list-header">
+                            <h1 class="title">购物车</h1>
+                            <span class="empty" @click="empty">清空</span>
+                        </div>
+                        <div class="list-content" ref="listContent">
+                            <ul>
+                                <li class="food" v-for="(food, index) in selectFoods" :key="index">
+                                    <span class="name">{{ food.name }}</span>
+                                    <div class="price">
+                                        <span>￥{{ food.price*food.count}}</span>
+                                    </div>
+                                    <div class="cartcontrol-wrapper">
+                                        <cartcontrol :food="food"></cartcontrol>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </transition>
             </div>
-          </transition>
-      </div>
-  </div>
+        </div>
+        <transition name="fade">
+            <div class="list-mask" @click="hideList" v-show="listShow"></div>
+        </transition>
+    </div>
 </template>
 
 <script>
@@ -73,11 +78,28 @@ export default {
         }
     },
     methods: {
+        //开启关闭购物车列表，根据count进行判断
         toggleList() {
             if(!this.totalCount) { // 如果count为0，就return空
                 return
             }
             this.fold = !this.fold //取反，开启时，点击就关闭。
+        },
+        //清空购物车
+        empty() {
+            this.selectFoods.forEach((food) =>{
+                food.count = 0
+            })
+        },
+        //点击遮罩隐藏购物车
+        hideList() {
+            this.fold = true //依赖listShow()方法，把fold = true传进去进行判断
+        },
+        pay(){
+            if( this.totalPrice < this.minPrice){
+                return
+            }
+            window.alert(`支付${this.totalPrice}元`)
         }
     },
     computed: {

@@ -16,7 +16,7 @@
         <li v-for="(item, index) in goods" :key="index" class="food-list food-list-hook" >
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="(food, index) in item.foods" :key="index" class="food-item border-1px">
+            <li @click="selectFood(food,$event)" v-for="(food, index) in item.foods" :key="index" class="food-item border-1px">
               <div class="icon">
                 <img :src="food.icon" width="57px">
               </div>
@@ -40,6 +40,7 @@
     </div>
     <shopcart ref="shopcart"  :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
   </div>
+  <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -47,17 +48,20 @@
 import BScroll from 'better-scroll'
 import shopcart from '../shopCart/shopcart'
 import cartcontrol from '../cartcontrol/cartcontrol'
+import food from '../food/food'
     export default{
       data() {
         return {
           goods:[],
           listHeight:[], //存每个菜单列表的高度
-          scrollY: 0
+          scrollY: 0,
+          selectedFood:{}
         }
       },
       components:{
         shopcart,
-        cartcontrol
+        cartcontrol,
+        food
       },
       props:{
         seller:{
@@ -133,13 +137,20 @@ import cartcontrol from '../cartcontrol/cartcontrol'
         },
         selectMenu(index,event) {
           //传入一个原生网页浏览器没有的事件,是BScroll中的 _constructed
-          console.log(event)
           if(!event._constructed){
             return false
           }
           let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
           let el = foodList[index]
           this.foodsScroll.scrollToElement(el,300)
+        },
+        selectFood(food,event) {
+          if(!event._constructed){
+            return false
+          }
+          //选中的food等于传入的food
+          this.selectedFood = food
+          this.$refs.food.show()
         }
       }
     }
