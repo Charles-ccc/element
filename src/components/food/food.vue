@@ -1,6 +1,6 @@
 <template>
     <transition name="move">
-        <div v-show="showFlag" class="food" ref="good">
+        <div v-show="showFlag" class="food" ref="food">
             <div class="food-content">
                 <div class="image-header">
                     <img :src="food.image">
@@ -17,17 +17,18 @@
                     <div class="price">
                         <span class="now">￥{{food.price}}</span><span v-show="food.oldPrice" class="old">{{food.oldPrice}}</span>
                     </div>
+                    <div class="cartcontrol-wrapper">
+                        <cartcontrol :food="food"></cartcontrol>
+                    </div>
+                    <div class="buy" @click="addFirst" v-show="!food.count || food.count === 0">加入购物车</div>
                 </div>
-                <div class="cartcontrol-wrapper">
-                    <cartcontrol ：food="food"></cartcontrol>
-                </div>
-                <div class="buy" v-show="!food.count || food.count == 0"></div>
             </div>
         </div>
     </transition>
 </template>
 
 <script>
+import Vue from 'vue'
 import BScroll from 'better-scroll'
 import cartcontrol from '../cartcontrol/cartcontrol'
 export default {
@@ -48,17 +49,24 @@ export default {
         show() {
             this.showFlag = true
             this.$nextTick(() => {
-                if(!this.scroll){
-                    this.scroll = new BScroll(this.$refs.food,{
-                        click: true
+                if (!this.scroll) {
+                    this.scroll = new BScroll(this.$refs.food, {
+                    click: true
                     })
-                }else{
+                } else {
                     this.scroll.refresh()
                 }
             })
         },
         hide() {
             this.showFlag = false
+        },
+        addFirst(event) {
+            console.log("click")
+            if(!event._constructed) {
+                return
+            }
+            Vue.set(this.food, "count", 1)
         }
     }
 }
@@ -82,7 +90,7 @@ export default {
             position relative
             width 100%
             height 0
-            padding-bottom 100% //使宽高相等
+            padding-top 100% //使宽高相等
             img
                 position absolute
                 top 0
@@ -99,6 +107,7 @@ export default {
                     font-size 20px
                     color #ffffff
         .content
+            position: relative
             padding 18px
             .title
                 line-height 14px
@@ -127,6 +136,21 @@ export default {
                     text-decoration line-through
                     font-size 10px
                     color rgb(147,153,159)
-
-
+            .cartcontrol-wrapper
+                position absolute
+                right 12px
+                bottom 12px
+            .buy
+                position absolute
+                right 18px
+                bottom 18px
+                z-index 10
+                height 24px  3
+                line-height 24px
+                padding 0 12px
+                box-sizing border-box
+                border-radius 12px
+                font-size 10px
+                color #ffffff
+                background-color rgb(0,160,220)
 </style>

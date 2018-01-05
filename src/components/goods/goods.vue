@@ -17,7 +17,7 @@
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li @click="selectFood(food,$event)" v-for="(food, index) in item.foods" :key="index" class="food-item border-1px">
-              <div class="icon" @click="abc">
+              <div class="icon">
                 <img :src="food.icon" width="57px">
               </div>
               <div class="content">
@@ -152,9 +152,6 @@ import food from '../food/food'
           //选中的food等于传入的food
           this.selectedFood = food
           this.$refs.food.show()
-        },
-        abc(){
-          this.$refs.food.abc()
         }
       }
     }
