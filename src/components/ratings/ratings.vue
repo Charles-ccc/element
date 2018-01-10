@@ -26,6 +26,30 @@
       </div>
       <split></split>
       <ratingselect :select-type="selectType" :only-content="onlyContent" :ratings="ratings"></ratingselect>
+      <div class="rating-wrapper">
+        <ul>
+          <li v-for="(rating, index) in ratings" :key="index" class="rating-item">
+            <div class="avatar">
+              <img :src="rating.avatar">
+            </div>
+            <div class="content">
+              <h1 class="name">{{rating.username}}</h1>
+              <div class="star-wrapper">
+                <star :size="24" :score="rating.score"></star>
+                <span class="delivery" v-show="rating.deliveryTime">{{rating.deliveryTime}}</span>
+              </div>
+              <p class="text">{{rating.text}}</p>
+              <div class="recommend" v-show="rating.recommend && rating.recommend.length">
+                <span class="icon-thumb_up"></span>
+                <span class="item" v-for="(item, index) in rating.recommend" :key="index">{{item}}</span>
+              </div>
+              <div class="time">
+                {{rating.rateTime | formatDate}}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -61,8 +85,8 @@ const ALL = 2
       created() {
         this.$http.get('http://localhost:8080/api/data')
         .then((res) => {
-          console.log(res.data.api_data.goods[0].foods[0].ratings)
-          //this.ratings = res.data.api_data.goods.foods.ratings
+          console.log(res.data.api_data.ratings)
+          this.ratings = res.data.api_data.ratings
         })
         .catch(err => {
           console.log(err)
