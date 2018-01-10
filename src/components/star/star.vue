@@ -25,7 +25,7 @@ export default {
     itemClasses() {
         let result = []
         let score = Math.floor(this.score * 2) / 2
-        let hasDecimal = score % 1 !== 0
+        let hasDecimal = score % 1 !== 0  //获得一个布尔值，判断是否有余数，有余数为true。
         let integer = Math.floor(score)
         for(let i=0;i<integer;i++){
             result.push(CLS_ON)
