@@ -25,19 +25,29 @@
 <script>
 import header from './components/header/header'
 import axios from 'axios'
+import{urlParse} from '../src/common/js/until' 
 export default {
   data() {
     return {
-      seller: {}
+      seller: {
+        //立即执行函数，id从url的参数拿到
+        id: (()=>{
+          let queryParam = urlParse()
+          return queryParam.id
+          //console.log(queryParam.id)
+        })()
+      }
     }
   },
   components:{
     "v-header" :header
   },
   created() {
-    this.$http.get('http://localhost:8080/api/data')
+    const url = 'http://localhost:8080/api/data'
+    this.$http.get(url + '?id=' + this.seller.id)
     .then( (res) => {
       this.seller = res.data.api_data.seller
+      //this.seller = Object.assign({}, this.seller, res.data)
     })
     .catch( (error) => {
       console.log(error)
