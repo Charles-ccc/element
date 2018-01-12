@@ -33,8 +33,8 @@ export default {
         //立即执行函数，id从url的参数拿到
         id: (()=>{
           let queryParam = urlParse()
+          //console.log(queryParam)
           return queryParam.id
-          //console.log(queryParam.id)
         })()
       }
     }
@@ -46,8 +46,11 @@ export default {
     const url = 'http://localhost:8080/api/data'
     this.$http.get(url + '?id=' + this.seller.id)
     .then( (res) => {
-      this.seller = res.data.api_data.seller
-      //this.seller = Object.assign({}, this.seller, res.data)
+      //this.seller = res.data.api_data.seller
+      //console.log(res.data.api_data)
+      //console.log(this.seller)
+      this.seller = Object.assign({}, this.seller, res.data.api_data.seller)
+      //console.log(this.seller)
     })
     .catch( (error) => {
       console.log(error)
